@@ -1,0 +1,10 @@
+Disp1	99.99	1
+Seg1	5	1
+Disp2	99.99	1
+Seg2	5	1
+Disp3	99.99	1
+Seg3	5	1
+Disp4	99.99	1
+Seg4	5	1
+Disp5	99.99	1
+Seg5	5	1

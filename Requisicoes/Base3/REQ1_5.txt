@@ -1,0 +1,5 @@
+RAM	8	1
+Disco	20	1
+CPU	4	1
+Disp	98	1
+Seg	4	1

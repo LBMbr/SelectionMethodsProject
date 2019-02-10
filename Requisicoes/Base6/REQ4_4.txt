@@ -1,0 +1,4 @@
+TS	S	0.53
+Sec	M	0.27
+Usa	G	0.13
+Sup	G	0.07

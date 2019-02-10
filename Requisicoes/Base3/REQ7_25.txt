@@ -1,0 +1,15 @@
+Disco1	50	1
+Disp1	97	1
+Seg1	3	1
+Disco2	50	1
+Disp2	97	1
+Seg2	3	1
+Disco3	50	1
+Disp3	97	1
+Seg3	3	1
+Disco4	50	1
+Disp4	97	1
+Seg4	3	1
+Disco5	50	1
+Disp5	97	1
+Seg5	3	1

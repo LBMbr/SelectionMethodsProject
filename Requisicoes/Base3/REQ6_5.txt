@@ -1,0 +1,4 @@
+RAM	4	1
+Disco	40	1
+Disp	98	1
+Seg	2	1

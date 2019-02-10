@@ -1,0 +1,3 @@
+RAM	4	1.0
+Disco	20	1.0
+Nucleos	2	1.0

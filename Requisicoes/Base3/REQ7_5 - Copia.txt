@@ -1,0 +1,4 @@
+Disco	50	1
+Disp	97	1
+Seg	3	1
+Custo	4.5	1

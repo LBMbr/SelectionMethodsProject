@@ -1,0 +1,4 @@
+TS	A,P	1
+Sec	H	1
+Usa	VG	1
+Sup	E	1

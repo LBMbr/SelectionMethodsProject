@@ -1,0 +1,4 @@
+RAM	16	1
+Disco	100	1
+CPU	5	1
+Custo	7.5	1

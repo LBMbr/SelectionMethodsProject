@@ -1,0 +1,5 @@
+RAM	16	1
+Disco	40	1
+Cores	8	1
+SOs	2	1
+Disp	99	1

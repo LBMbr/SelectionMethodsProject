@@ -1,0 +1,4 @@
+RAM	2	1
+Disco	20	1
+CPU	2	1
+Disp	99	1
