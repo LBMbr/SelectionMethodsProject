@@ -1,0 +1,8 @@
+30
+TS[1], Sec[1], Usa, Sup, Custo
+catcomp(A;P;VM;S), catord[HT](L;M;H), catord[HT](B;F;G;VG), catord[HT](P;R;G;E), num[LB]
+A	P	S	VM	A,P	A,VM	A,P,S	P,VM	A,P,VM	A,VM,S	A	P	S	VM	A,P	A,VM	A,P,S	P,VM	A,P,VM	A,VM,S	A	P	S	VM	A,P	A,VM	A,P,S	P,VM	A,P,VM	A,VM,S	
+L	M	M	H	H	L	M	L	M	H	L	M	M	H	H	L	M	L	M	H	L	M	M	H	H	L	M	L	M	H	
+G	F	G	B	F	G	G	VG	G	F	G	F	G	B	F	G	G	VG	G	F	G	F	G	B	F	G	G	VG	G	F	
+R	G	R	P	G	E	R	P	R	E	R	G	R	P	G	E	R	P	R	E	R	G	R	P	G	E	R	P	R	E	
+1	1.5	2.5	3	3.5	5	4.5	4	6	9	1	1.5	2.5	3	3.5	5	4.5	4	6	9	1	1.5	2.5	3	3.5	5	4.5	4	6	9	
