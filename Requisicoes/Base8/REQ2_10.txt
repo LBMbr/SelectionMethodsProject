@@ -1,0 +1,2 @@
+RAM	8	1
+Storage	50	1

@@ -1,0 +1,9 @@
+RAM	8	1
+Storage	50	1
+SO	W	1
+Fsup	yes	1
+Ftrial	yes	1
+FIP	yes	1
+Encryp	yes	1
+Backup	yes	1
+GPU	yes	1

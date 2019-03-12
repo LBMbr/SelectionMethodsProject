@@ -1,0 +1,4 @@
+RAM	4	1
+Storage	20	1
+SO	L	1
+Fsup	yes	1
