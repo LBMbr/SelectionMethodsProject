@@ -26,14 +26,15 @@ public class Matching
     /** Requisicao do cliente usada pelo matching. */
     private Dados_Req requisicao;
     /** Tabela de atendimento dos PIs da base de dados, tomando como base a requisicao. */
-    //private boolean[][] tabAtend; // Tamanho: [Num PIs Req][Num prov DB]
+    private boolean[][] tabAtend; // Tamanho: [Num PIs Req][Num prov DB]
     /** Constante de atendimento basico para PIs quantitativos. Range: ]0,1]. */
     private double C1 = 0.9;
     /** Constante de superacao do atendimento basico para PIs quantitativos. Menor que C1. Range: ]0,1[. */
     private double C2 = 1.0 - C1;
     /** Constante de atendimento basico para PIs qualitativos. Range: ]0,1[.*/
     private double C3 = 0.7;
-    
+    /* Casas decimais do arrendondamento. */
+    private static int CASAS_DECIMAIS = 10;
     /**
      * 
      * @param NUM_PROV
@@ -318,7 +319,7 @@ public class Matching
             for(j = 0; j < niveis.size(); j++)
             {   // Para cada nível de importancia
                 dados.setScoreNivel(j, dados.getScoreNivel(j) / countNiveis.get(j));
-                dados.setScoreNivel(j, arredonda(dados.getScoreNivel(j), 4));  // Arredonda com 4 casas decimais
+                dados.setScoreNivel(j, arredonda(dados.getScoreNivel(j), CASAS_DECIMAIS));  // Arredondamento
                 //System.out.println("\t" + niveis.get(j) + ": " + dados.getScoreNivel(j));
             }
             //System.out.println();
@@ -340,7 +341,7 @@ public class Matching
                 //System.out.println("(" + niveis.get(j) + ")[" + i + "]" + " * (" + dados.getScoreNivel(j) + ")[" + j + "]: " + dados.getScoreFinal());
             }
             dados.setScoreFinal(dados.getScoreFinal() / sumPesos);
-            dados.setScoreFinal(arredonda(dados.getScoreFinal(), 4)); // Arredonda com 4 casas decimais
+            dados.setScoreFinal(arredonda(dados.getScoreFinal(), CASAS_DECIMAIS)); // Arredondamento
             //System.out.println("Score final:" + dados.getScoreFinal() + " pts");
         }      
         
@@ -356,6 +357,10 @@ public class Matching
         // Retorna os "n" melhores provedores
         while(eleitos.size() > n)
             eleitos.remove(eleitos.size() - 1); // Remove o último
+        
+        // DEBUG
+        /*for(i = 0; i < eleitos.size(); i++)
+            System.out.println(eleitos.get(i).getNome() + ": " + scoresProvs.get(getPosElem(scoresProvs, eleitos.get(i))).getScoreFinal());*/
         
         // Para o cronômetro
         tempoFinal = (System.currentTimeMillis() - tempoInicial); //Em ms
@@ -650,7 +655,7 @@ public class Matching
     
     /************************* FUNÇÕES DE ATUALIZAÇÃO *************************/
     /** Função que que cria e preenche a tabela de atendimento. */
-    /*private void atualizaTabAtend()
+    private void atualizaTabAtend()
     {
         int i, j;
         int numPIsReq = this.requisicao.getNumPis();
@@ -678,11 +683,11 @@ public class Matching
             }
             piReq.setTipo(this.base_dados.getTipoPI(piReq.getNome()));
         }
-    }*/
+    }
     
     /************************** FUNÇÕES DE IMPRESSÕES **************************/
     /** Imprime os dados da tabela de atendimento. */
-    /*public void imprimeTabAtend()
+    public void imprimeTabAtend()
     {
         int i, j;    
         System.out.println("Tabela de atendimento:"); 
@@ -698,13 +703,13 @@ public class Matching
             System.out.println();
         }
         System.out.println();
-    }*/
+    }
     /** Imprime a base de dados utilizada, a requisição e a tabela de atendimento. */
     public void imprime()
     {
         this.base_dados.imprimeDados();
         this.requisicao.imprimeDados(); 
-        //this.imprimeTabAtend();
+        this.imprimeTabAtend();
     }
     /************************** FUNÇÕES AUXILIARES *****************************/
         

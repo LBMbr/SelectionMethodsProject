@@ -36,7 +36,7 @@ public class DEA
     /** O número de outputs para o DEA. */
     private static final int NUM_OUTPUTS = 2;
     /** Quantidade de casas decimais, após a virgula, de arredondamento dos dados. */
-    private static final int CASAS_DECIMAIS = 3;
+    private static final int CASAS_DECIMAIS = 8;
         
     /** Pondera a importância dos RECURSOS do provedor com a requisição do cliente. */
     private static final int ALFA = 1;
@@ -450,6 +450,8 @@ public class DEA
         
         for(int i = 0; i < base_dados.getNumProvedores(); i++)
             insere(ranqueados, base_dados.getProvedorPos(i));
+        
+        // 
         
         return ranqueados;
     }      
