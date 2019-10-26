@@ -18,13 +18,24 @@ public class Dados_DB
     /** Array com os provedores utilizados.  */
     private final ArrayList<Provedor> provedores = new ArrayList();
     /**************************************************************************
-     *         Prov 1  Prov 2  Prov 3  (...)   Prov n   Tipo        Grupo
-     * PI 1    v11     v12     v13     (...)   v1n      Tipo 1      x
-     * PI 2    v21     v22     v23     (...)   v2n      Tipo 2      y
-     * PI 3    v31     v32     v33     (...)   v3n      Tipo 3      z
-     * ...     ...     ...     ...     (...)   ...      ...         ...
-     * PI m    vm1     vm2     vm3     (...)   vmn      Tipo m      m
-     * Custo    y1      y2      y3     (...)   yn       LB          0
+     *          Prov 1  Prov 2  Prov 3  (...)   Prov n  Tipo    Grupo
+     * PI 1     v11     v12     v13     (...)   v1n     Tipo 1  x
+     * PI 2     v21     v22     v23     (...)   v2n     Tipo 2  y
+     * PI 3     v31     v32     v33     (...)   v3n     Tipo 3  z
+     * ...      ...     ...     ...     (...)   ...     ...     ...
+     * PI m     vm1     vm2     vm3     (...)   vmn     Tipo m  m
+     * Custo    y1      y2      y3      (...)   yn      LB          0
+     ***************************************************************************
+     *    #  #  #  #  #  #  #  #  #  #   OU   #  #  #  #  #  #  #  #  #  #
+     ***************************************************************************
+     *          PI 1    PI 2    PI 3    (...)   PI m    Custo
+     * Tipo     Tipo 1  Tipo 2  Tipo 3  (...)   Tipo m  LB
+     * Grupo    x       y       z       (...)   m       0
+     * Prov 1   v11     v12     v13     (...)   v1n     y1
+     * Prov 2   v21     v22     v23     (...)   v2n     y2
+     * Prov 3   v31     v32     v33     (...)   v3n     y3
+     * ...      ...     ...     ...     (...)   ...     ...
+     * Prov n   vn1     vn2     vn3     (...)   vnm     yn     
     **************************************************************************/    
     
     /**
@@ -41,20 +52,35 @@ public class Dados_DB
                 throw new IllegalArgumentException("O Provedor " + this.provedores.get(i).getNome() + " nao pode ser inserido!");        
     }    
     /**************************************************************************
-     *          Formado do arquivo de dados:    ( n prov x m Pi )
-     * (quant prov) OU (nome_Prov1, nome_Prov2, ... , nome_Prov n)(Separados por virgulas)  <QUEBRA LINHA>
-     * nome_Pi1[grupoPi1], nome_Pi2[grupoPi2], ... , nome_Pi m[grupoPi m], custo  <QUEBRA LINHA>
-     * TYPE 1[tipoPi1] (...), TYPE 2[tipoPi2], ... , TYPE m[tipoPi m], LB  <QUEBRA LINHA>
+     * #         Formado do arquivo de dados:    ( n prov x m Pi )
+     * (quant prov) OU (nome_Prov1, nome_Prov2, ... , nome_Prov n)(Separados por virgulas) <QUEBRA LINHA>
+     * nome_Pi1[grupoPi1], nome_Pi2[grupoPi2], ... , nome_Pi m[grupoPi m], custo           <QUEBRA LINHA>
+     * TYPE 1[tipoPi1] (...), TYPE 2[tipoPi2], ... , TYPE m[tipoPi m], LB                  <QUEBRA LINHA>
+     ****************************************************************************
+     * # Provedor por coluna (PADRAO - default)   (m x n) #
      * v11  <TAB>  v12  <TAB>  v13  <TAB>  (...)   v1n  <QUEBRA LINHA>
      * v21  <TAB>  v22  <TAB>  v23  <TAB>  (...)   v2n  <QUEBRA LINHA>
      * v31  <TAB>  v32  <TAB>  v33  <TAB>  (...)   v3n  <QUEBRA LINHA>
      * ...  <TAB>  ...  <TAB>  ...  <TAB>  (...)   ...  <QUEBRA LINHA>
      * vm1  <TAB>  vm2  <TAB>  vm3  <TAB>  (...)   vmn  <QUEBRA LINHA>      
      * y1   <TAB>  y2   <TAB>  y3   <TAB>  (...)   yn   <QUEBRA LINHA>
+     ***************************************************************************
+     *    #  #  #  #  #  #  #  #  #  #   OU   #  #  #  #  #  #  #  #  #  #
+     ***************************************************************************
+     * # Provedor por linha                         (n x m) #
+     * (*)v11  <TAB>  v12  <TAB>  v13  <TAB>  (...)   v1m  <TAB>  y1  <QUEBRA LINHA>
+     *    v21  <TAB>  v22  <TAB>  v23  <TAB>  (...)   v2m  <TAB>  y2  <QUEBRA LINHA>
+     *    v31  <TAB>  v32  <TAB>  v33  <TAB>  (...)   v3m  <TAB>  y3  <QUEBRA LINHA>
+     *    ...  <TAB>  ...  <TAB>  ...  <TAB>  (...)   ...  <TAB>  ... <QUEBRA LINHA>
+     *    vn1  <TAB>  vn2  <TAB>  vn3  <TAB>  (...)   vnm  <TAB>  yn  <QUEBRA LINHA>
+     * # (*) -> Indicador que o input sera lido nesse formato! Provedor por linha
+     ***************************************************************************
      * [...] -> Elementos Opcionais
+     * # -> Comentario (Comment)
      * grupoPi = 0, 1, 2, ... (Zero: não possui grupo, padrao)
      * tipoPi = HB, LB, NB, HT, LT, HLT (padrao: NB)
      * TYPE = "num" ou "cat" ou "catord" ou "catcomp" (Categorias entre "()" para categoricos, separados por ;)
+     * yj = Valores de custos
     **************************************************************************/
     /**
      * Carrega na memória os dados contidos em um arquivo no formato acima e o retorna.
@@ -67,7 +93,7 @@ public class Dados_DB
             return null;
         
         try {
-            int i, j, numProv;
+            int i, j, numProv, numPis;
             Categoria[] cats;
             String nome, TYPE, tipo, categorias;
             String[] nomesProvs, nomesPis, grupos, stringTipos, valores, vetCats;
@@ -109,11 +135,12 @@ public class Dados_DB
             linha = linha.toLowerCase().replaceAll(" ", "").replaceAll("\t", "");  
             // Separa os nomes dos PIs
             nomesPis = linha.split(",");
-            if(nomesPis.length <= 0)
+            numPis = nomesPis.length;
+            if(numPis <= 0)
                 throw new IllegalArgumentException("Nao ha PIs suficientes informados!\n");
             // Adiciona o nome de cada PI para cada provedor e seu grupo
-            grupos = new String[nomesPis.length];
-            for(i = 0; i < nomesPis.length; i++)
+            grupos = new String[numPis];
+            for(i = 0; i < numPis; i++)
             {  
                 //System.out.print(nomesPis[i] + " ");
                 // NomePI [GrupoPI]
@@ -158,10 +185,10 @@ public class Dados_DB
             // Separa os Tipos dos PIs
             stringTipos = linha.split(","); 
             // Verifica a consistencia da entrada
-            if(nomesPis.length != stringTipos.length)
+            if(numPis != stringTipos.length)
                 throw new IllegalArgumentException("A quantidade de PIs informados ("
-                    + nomesPis.length + ") difere da quantidade de tipos de PIs "
-                    + "informados (" + stringTipos.length + ")!\n");
+                    + numPis + ") difere da quantidade de tipos de PIs informados "
+                    + "(" + stringTipos.length + ")!\n");
             // Adiciona o tipo de cada PI para cada provedor
             for(i = 0; i < stringTipos.length; i++)
             {
@@ -308,15 +335,60 @@ public class Dados_DB
             System.out.println("\n" + stringTipos.length); */  
                                     
             // # # # # # DEMAIS LINHAS: Valores dos PIs # # # # #  
-            j = 0; // Conta linhas restantes            
-            while((linha = br.readLine()) != null)
-            { 
-                linha = linha.toLowerCase().replaceAll(" ", "");
-                valores = linha.split("\t");
+            // Qual o formato do input? Provedor por linha ou coluna?
+            linha = br.readLine(); // Le a primeira linha
+            linha = linha.toLowerCase().replaceAll(" ", "");
+            valores = linha.split("\t");
+            j = 0; // Conta linhas restantes
+            if(valores[0].charAt(0) == '*') // Provedor por linha
+            { // Provedor por linha (cada linha possui todos os valores dos PIs de um provedor)
+                //System.out.println("Provedor por linha!");
+                valores[0] = valores[0].substring(1); // Remove o asterisco
+                // Teste de consistencia
+                if(valores.length != numPis)
+                    throw new IllegalArgumentException("Quantidade de valores informada ("
+                        + valores.length + ") ao provedor " + (j+1) + ", difere da "
+                        + "quantidade de PIs passada (" + numPis + ")!\n");
+                // Acrescenta os valores da linha (Provedor linha j para todo PI i)
+                for(i = 0; i < numPis; i++)
+                    provedores.get(j).getPiPos(i).setValor(valores[i]);
+                // DEBUG
+                /*for(i = 0; i < valores.length; i++)
+                    System.out.print(valores[i] + " ");
+                System.out.println("\n" + valores.length);*/
+                j++;
+                // Repete ate o processo para as demais linhas ate o fim dos dados
+                while((linha = br.readLine()) != null)
+                {
+                    linha = linha.toLowerCase().replaceAll(" ", "");
+                    valores = linha.split("\t");
+                    // Teste de consistencia
+                    if(valores.length != numPis)
+                        throw new IllegalArgumentException("Quantidade de valores informada ("
+                            + valores.length + ") ao provedor " + (j+1) + ", difere da "
+                            + "quantidade de PIs passada (" + numPis + ")!\n");
+                    // Acrescenta os valores da linha (Provedor linha j para todo PI i)
+                    for(i = 0; i < numPis; i++)
+                        provedores.get(j).getPiPos(i).setValor(valores[i]);
+                    // DEBUG
+                    /*for(i = 0; i < valores.length; i++)
+                        System.out.print(valores[i] + " ");
+                    System.out.println("\n" + valores.length);*/
+                    j++;
+                }
+                // Teste de consistencia
+                if(j != numProv)
+                    throw new IllegalArgumentException("A quantidade linhas de dados informado ("
+                        + j + ") deve ser igual a quantidade de provedores passados (" + numProv + ")!\n");
+            }
+            else // default
+            { // Provedor por coluna (cada linha possui um valor de PI para todos os provedores)
+                //System.out.println("Provedor por coluna!");
                 if(valores.length != numProv)
                     throw new IllegalArgumentException("Quantidade de valores informada ("
                         + valores.length + ") ao PI " + (j+1) + ", difere da "
                         + "quantidade de provedores passada (" + numProv + ")!\n");
+                // Acrescenta os valores da linha (PI linha j para todo provedor i)
                 for(i = 0; i < numProv; i++)
                     provedores.get(i).getPiPos(j).setValor(valores[i]);
                 // DEBUG
@@ -324,11 +396,29 @@ public class Dados_DB
                     System.out.print(valores[i] + " ");
                 System.out.println("\n" + valores.length);*/
                 j++;
+                // Repete ate o processo para as demais linhas ate o fim dos dados
+                while((linha = br.readLine()) != null)
+                {
+                    linha = linha.toLowerCase().replaceAll(" ", "");
+                    valores = linha.split("\t");
+                    // Teste de consistencia
+                    if(valores.length != numProv)
+                        throw new IllegalArgumentException("Quantidade de valores informada ("
+                            + valores.length + ") ao PI " + (j+1) + ", difere da "
+                            + "quantidade de provedores passada (" + numProv + ")!\n");
+                    for(i = 0; i < numProv; i++)
+                        provedores.get(i).getPiPos(j).setValor(valores[i]);
+                    // DEBUG
+                    /*for(i = 0; i < valores.length; i++)
+                        System.out.print(valores[i] + " ");
+                    System.out.println("\n" + valores.length);*/
+                    j++;
+                }
+                // Teste de consistencia
+                if(j != numPis)
+                    throw new IllegalArgumentException("A quantidade linhas de dados informado ("
+                        + j + ") deve ser igual a quantidade de PIs passados (" + numPis + ")!\n");
             }
-            if(j != nomesPis.length)
-                throw new IllegalArgumentException("A quantidade linhas de dados informado ("
-                    + j + ") deve ser igual a quantidade de PIs passados (" + nomesPis.length + ")!\n");
-            
             br.close();
             // Coloca o PI especial "custo" no lugar correto             
             for(i = 0; i < provedores.size(); i++)
