@@ -237,9 +237,10 @@ public class AvaliaFitness
     }*/
     /**
      * Função de avaliação do fitness para o individuo "ind".
-     * @param ind IndividuoBin que se deseja avaliar o fitness.   
+     * @param ind IndividuoBin que se deseja avaliar o fitness.
+     * @return O fitness do individuo passado.
      */    
-    public void fitness(IndividuoBin ind)
+    public double fitness(IndividuoBin ind)
     {
         if(ind.getTamCod() > base_dados.getNumProvedores())
             throw new IllegalArgumentException("Erro: A codificação do individuo não deve ultrapassar"
@@ -255,7 +256,7 @@ public class AvaliaFitness
         {
             ind.setFitness(0.00);
             ind.setPenalizado(true);
-            return;
+            return 0.00;
         }
         
         double wc = 1.0; // Peso do custo
@@ -276,19 +277,21 @@ public class AvaliaFitness
         // Fitness final deve ser positivo
         if(fitness < 0.00) fitness = 0.00;   
         // Atualiza o fitness do individuo
-        ind.setFitness(fitness); 
+        ind.setFitness(fitness);
         // Resultados - DEBUGG 
         //System.out.println("PtsCusto: " + custo);
         //System.out.println("PtsProv: " + numPr);
         //System.out.println("Objetivo: " + objetivo);
         //System.out.println("Penalidade: " + penalidade);
         //System.out.println("Fitness: " + fitness);
+        return fitness;
     }
     /**
      * Função de avaliação do fitness para o individuo "ind".
-     * @param ind IndividuoReal que se deseja avaliar o fitness.   
+     * @param ind IndividuoReal que se deseja avaliar o fitness.
+     * @return O fitness do individuo passado.
      */    
-    public void fitness(IndividuoReal ind)
+    public double fitness(IndividuoReal ind)
     {
         if(ind.getTamCod() > base_dados.getNumProvedores())
             throw new IllegalArgumentException("Erro: A codificação do individuo não deve ultrapassar"
@@ -308,7 +311,7 @@ public class AvaliaFitness
         {
             ind.setFitness(0.00);
             ind.setPenalizado(true);
-            return;
+            return 0.00;
         }
         
         double wc = 1.0; // Peso do custo
@@ -335,7 +338,8 @@ public class AvaliaFitness
         //System.out.println("PtsProv: " + numPr);
         //System.out.println("Objetivo: " + objetivo);
         //System.out.println("Penalidade: " + penalidade);
-        //System.out.println("Fitness: " + fitness);        
+        //System.out.println("Fitness: " + fitness);
+        return fitness;
     }
     /**
      * Calcula a pontuação para o número de provedores.

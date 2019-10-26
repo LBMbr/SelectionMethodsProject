@@ -18,10 +18,13 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.Random;
 import static modelos.Constantes.*;
 
 public abstract class TestaMetodos 
-{ 
+{
+    /** Gerador randomico da classe. */
+    private static final Random gerador = new Random();
     /**
      * Roda os Algoritmos.
      * @param args [Quant. prov.] [Num. Req.] [Num. PIs] [Num. DB]
@@ -29,6 +32,8 @@ public abstract class TestaMetodos
     public static void main(String args[]) //throws InterruptedException
     {              
         // # # # # # # # # # # # # # # # # TESTES # # # # # # # # # # # # # # # #
+        /*Dados_DB db = Dados_DB.carregaDados("Dados/Base8/DADOS2016x10.txt");
+        db.imprimeDados();*/
         /*int req = 8;
         double[] vals = diminuiCusto(100, 6, 3, afetados[req - 1]);
         for(i = 0; i < vals.length; i++)
@@ -210,7 +215,7 @@ public abstract class TestaMetodos
         // PARAMETROS SA
         int maxIt = 100000;
         int cteMetr = 500;
-        // PARAMETROS GA
+        // PARAMETROS AG
         int probCross = 95;
         int probMutAG = 3;
         // PARAMETROS EDB
@@ -222,7 +227,7 @@ public abstract class TestaMetodos
         // Guarda as respostas dos metodos
         ArrayList<Provedor> eleitosMtc, eleitosDEA;
         ArrayList<boolean[]> eleitosSA, eleitosHibridoSA;
-        ArrayList<IndividuoBin> eleitosAG, eleitosEDB, eleitosEDD, eleitosExaustivo;
+        ArrayList<IndividuoBin> eleitosAG, eleitosEDB, eleitosEDD, eleitosExaustivo, eleitosOpt;
         
         // Para usar diminuicao de custos DB 3
         //                   (P8)(P6 P8)(P1 P6 P7)(P1 P2)(P6)(P3)(P5)(P1 P6)
@@ -237,68 +242,72 @@ public abstract class TestaMetodos
         
         // # # # PARA TESTES SIMPLES # # #
         // Com numeros constantes de provedores, PIs, numero da base, requisicao
-        int numProv = 61; 
-        int numDB = 7;
-        int numPis = 4;   // DB 1,2,3 = 5   ; DB 4,5,6,7 = 4        
-        int numReqs = 5;  // DB 1,2,4,5,6,7 = 5 ; DB 3 = 8
-        int req = 3;
-        boolean dimCusto = false; // sempre falso pra DB 7 e 8
+        int numProv = 200; // DB 7 = 61; DB 8 = 672 
+        int numDB = 3;
+        int numPis = 5;   // DB 1,2,3 = 5; DB 4,5,6 = 4; DB 7 = 4 (so qt) ou 5 (qt e ql); DB 8 = 10
+        int numReqs = 8;  // DB 1,2,4,5,6,7,8 = 5; DB 3 = 8; DB 8 = 6
+        int req = 8;
+        boolean dimCusto = true; // sempre falso pra DB 7 e 8
                 
-        Dados_DB database = Dados_DB.carregaDados("Dados/Base" + numDB + "/DADOS" + numProv + "x" + numPis + ".txt");
+        //Dados_DB database = Dados_DB.carregaDados("Dados/Base" + numDB + "/DADOS" + numProv + "x" + numPis + ".txt");
         
         for(req = 1; req <= numReqs; req++)
         {
-            if(dimCusto) vals = diminuiCusto(numProv, numPis, numDB, afetados[req - 1]);
+            if(dimCusto && numDB < 7) vals = diminuiCusto(numProv, numPis, numDB, afetados[req - 1]);
             
             // DETERMINISTICOS
-            /*mt = new Matching(numProv, req, numPis, numDB, C1, C3);
-            eleitosMtc = mt.rodaMatching(n);   //mt.rodaMatching(n);   mt.rodaMatching(n);   mt.rodaMatching(n);   mt.rodaMatching(n);
-            for(j = 0; j < eleitosMtc.size(); j++)  System.out.println(eleitosMtc.get(j).getNome());
-            System.out.println();*/
-            
-            /*dea = new DEA(numProv, req, numPis, numDB, C);
-            eleitosDEA = dea.rodaDEA();
-            for(j = 0; j < eleitosDEA.size(); j++)  System.out.println(eleitosDEA.get(j).getNome());
-            System.out.println();*/
-            
+            //mt = new Matching(numProv, req, numPis, numDB, C1, C3);
+            //eleitosMtc = mt.rodaMatching(n); // mt.rodaMatching(n);   mt.rodaMatching(n);   mt.rodaMatching(n);   mt.rodaMatching(n);
+            //for(j = 0; j < eleitosMtc.size(); j++)  System.out.println(eleitosMtc.get(j).getNome()); System.out.println();
+                        
+            //dea = new DEA(numProv, req, numPis, numDB, C);
+            //eleitosDEA = dea.rodaDEA();
+            //for(j = 0; j < eleitosDEA.size(); j++)  System.out.println(eleitosDEA.get(j).getNome()); System.out.println();
+                        
             // METAHEURISTICOS
-            /*s0 = null;
-            sa = new SA(numProv, req, numPis, numDB, maxExecucoes, maxIt, cteMetr);
-            eleitosSA = sa.rodaSA(rel, s0);   sa.rodaSA(rel, s0);   //sa.rodaSA(rel, s0);   sa.rodaSA(rel, s0);   sa.rodaSA(rel, s0);
-            for(j = 0; j < eleitosSA.size(); j++)  imprimeProvCod(eleitosSA.get(j));
-            System.out.println();*/
+            //s0 = null;
+            //sa = new SA(numProv, req, numPis, numDB, maxExecucoes, maxIt, cteMetr);
+            //eleitosSA = sa.rodaSA(rel, s0);   //sa.rodaSA(rel, s0);   //sa.rodaSA(rel, s0);   sa.rodaSA(rel, s0);   sa.rodaSA(rel, s0);
+            //for(j = 0; j < eleitosSA.size(); j++)  imprimeProvCod(eleitosSA.get(j)); System.out.println();
+                        
+            //ag = new AG(numProv, req, numPis, numDB, maxExecucoes, maxGeracoes, tamPop, probCross, probMutAG); 
+            //eleitosAG = ag.rodaAG(rel, null);   //ag.rodaAG(rel, null);   //ag.rodaAG(rel, null);   ag.rodaAG(rel, null);   ag.rodaAG(rel, null);
+            //for(j = 0; j < eleitosAG.size(); j++)  eleitosAG.get(j).imprimeProvCod(); System.out.println();
+                        
+            //edb = new EDB(numProv, req, numPis, numDB, maxExecucoes, maxGeracoes, tamPop, probPertub, probMut);
+            //eleitosEDB = edb.rodaEDB(rel, null);   //edb.rodaEDB(rel, null);   edb.rodaEDB(rel, null);   edb.rodaEDB(rel, null);   edb.rodaEDB(rel, null);
+            //for(j = 0; j < eleitosEDB.size(); j++)  eleitosEDB.get(j).imprimeProvCod(); System.out.println();            
             
-            ag = new AG(numProv, req, numPis, numDB, maxExecucoes, maxGeracoes, tamPop, probCross, probMutAG); 
-            eleitosAG = ag.rodaAG(rel, null);   ag.rodaAG(rel, null);   //ag.rodaAG(rel, null);   ag.rodaAG(rel, null);   ag.rodaAG(rel, null);
-            for(j = 0; j < eleitosAG.size(); j++)  eleitosAG.get(j).imprimeProvCod();
-            System.out.println();
+            //edd = new EDD(numProv, req, numPis, numDB, maxExecucoes, maxGeracoes, tamPop, probPertub, F);  
+            //eleitosEDD = edd.rodaEDD(rel, null);   //edd.rodaEDD(rel, null);   //edd.rodaEDD(rel, null);   edd.rodaEDD(rel, null);   edd.rodaEDD(rel, null);
+            //for(j = 0; j < eleitosEDD.size(); j++)  eleitosEDD.get(j).imprimeProvCod(); System.out.println();            
             
-            /*edb = new EDB(numProv, req, numPis, numDB, maxExecucoes, maxGeracoes, tamPop, probPertub, probMut);
-            eleitosEDB = edb.rodaEDB(rel, null);   edb.rodaEDB(rel, null);   edb.rodaEDB(rel, null);   edb.rodaEDB(rel, null);   edb.rodaEDB(rel, null);
-            for(j = 0; j < eleitosEDB.size(); j++)  eleitosEDB.get(j).imprimeProvCod();
-            System.out.println();*/
-            
-            /*edd = new EDD(numProv, req, numPis, numDB, maxExecucoes, maxGeracoes, tamPop, probPertub, F);  
-            eleitosEDD = edd.rodaEDD(rel, null);   edd.rodaEDD(rel, null);   //edd.rodaEDD(rel, null);   edd.rodaEDD(rel, null);   edd.rodaEDD(rel, null);
-            for(j = 0; j < eleitosEDD.size(); j++)  eleitosEDD.get(j).imprimeProvCod();
-            System.out.println();*/
-            
+            //Opt opt = new Opt(numProv, req, numPis, numDB, maxExecucoes, maxIt);
+            //eleitosOpt = opt.rodaOpt(null);
+            //for(j = 0; j < eleitosOpt.size(); j++)  eleitosOpt.get(j).imprimeProvCod(); System.out.println();
+                    
             // HIBRIDOS
-            mt = new Matching(numProv, req, numPis, numDB, C1, C3);
+            /*mt = new Matching(numProv, req, numPis, numDB, C1, C3);
             eleitosMtc = mt.rodaMatching(n);
             s0 = retCodProv(eleitosMtc.get(0).getNome(), database);
             sa = new SA(numProv, req, numPis, numDB, maxExecucoes, maxIt, cteMetr);
             eleitosHibridoSA = sa.rodaSA(rel, s0);
-            for(j = 0; j < eleitosHibridoSA.size(); j++)  imprimeProvCod(eleitosHibridoSA.get(j));
-            System.out.println();
+            for(j = 0; j < eleitosHibridoSA.size(); j++)  imprimeProvCod(eleitosHibridoSA.get(j)); System.out.println();
+            */
+            
+            edd = new EDD(numProv, req, numPis, numDB, maxExecucoes, maxGeracoes/2, tamPop, probPertub, F);  
+            eleitosEDD = edd.rodaEDD(rel, null);
+            Opt opt = new Opt(numProv, req, numPis, numDB, maxExecucoes, maxIt/2);
+            eleitosOpt = opt.rodaOpt(eleitosEDD.get(gerador.nextInt(eleitosEDD.size())).getCod());
+            for(j = 0; j < eleitosOpt.size(); j++)  eleitosOpt.get(j).imprimeProvCod(); System.out.println();
             
             // EXAUSTIVO - Impraticavel para mais de 30 CPs
             /*exaustivo = new AlgExaustivo(numProv, req, numPis, numDB);         
             eleitosExaustivo = exaustivo.rodaExaustivo();
-            //for(j = 0; j < eleitosExaustivo.size(); j++)  eleitosExaustivo.get(j).imprimeProvCod();
-            System.out.println();*/
+            //for(j = 0; j < eleitosExaustivo.size(); j++)  eleitosExaustivo.get(j).imprimeProvCod(); System.out.println();
+            */
             
-            if(dimCusto) desfazDiminuiCusto(numProv, numPis, numDB, afetados[req - 1], vals);
+            if(dimCusto && numDB < 7) desfazDiminuiCusto(numProv, numPis, numDB, afetados[req - 1], vals);
         }
         
         // # # # # # # # # # # # # # # # EXAUSTIVO # # # # # # # # # # # # # # #
