@@ -100,9 +100,12 @@ public abstract class Constantes
      */
     public final static void imprimeVet(boolean[] vet)
     {
-        for(int i = 0; i < vet.length; i++)
-            System.out.print(vet[i] ? "1 ":"0 ");
-        System.out.println();
+        if(vet != null)
+        {
+            for(int i = 0; i < vet.length; i++)
+                System.out.print(vet[i] ? "1 ":"0 ");
+            System.out.println();
+        }        
     }
     /**
      * Imprime os provedores codificados pelo vetor de booleanos passados.
