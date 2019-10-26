@@ -136,7 +136,8 @@ public class IndividuoReal
      */
     public void setCodificacao(double[] codificacao) 
     {
-        this.codificacao = codificacao;       
+        //this.codificacao = codificacao;
+        System.arraycopy(codificacao, 0, this.codificacao, 0, codificacao.length);
     }
     /**
      * Muda o vetor de codificação binaria do individuo na posição passada pelo booleano passado.

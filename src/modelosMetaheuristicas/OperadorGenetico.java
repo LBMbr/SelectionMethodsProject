@@ -138,12 +138,11 @@ public abstract class OperadorGenetico
     public static int bitFlipMutation(IndividuoBin ind, int PROB_MUTACAO)
     {
         int prob, flag;
-        //Random gerador = new Random();
         
         if(PROB_MUTACAO < 0 || PROB_MUTACAO > 100)
             throw new IllegalArgumentException("A probabilidade de mutação deve assumir um valor inteiro de 0 a 100!");
-        
-        if(ind != null)
+                        
+        if(PROB_MUTACAO != 0 && ind != null)
         {
             flag = 0;            
             for(int i = 0; i < ind.getTamCod(); i++)

@@ -110,7 +110,8 @@ public class IndividuoBin
      */
     public void setCodificacao(boolean[] codificacao) 
     {
-        this.codificacao = codificacao;       
+        //this.codificacao = codificacao;
+        System.arraycopy(codificacao, 0, this.codificacao, 0, codificacao.length);
     }
     
     // # # # # # # # # # #  Clona um Individuo Binario  # # # # # # # # # #
