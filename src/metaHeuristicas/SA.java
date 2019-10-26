@@ -184,12 +184,12 @@ public class SA
         // Variaveis
         int i, it, itT, itDec, execucao, numProvs = af.getBase_dados().getNumProvedores();
         double T, prob, Ec, Ev, deltaE, Em;
-        long tempoInicial, tempoFinal;
-        boolean aleatorio = false;
+        long tempoInicial, tempoFinal;        
         boolean[] candidato, vizinho, melhor;        
         boolean[][] eleitos = new boolean[MAX_EXECUCOES][numProvs]; // Melhores solucoes de cada execusão
         double[] energias = new double[MAX_EXECUCOES]; // Melhores energias
         double[] tempoExecusao = new double[MAX_EXECUCOES]; // Tempo de execusão de cada execusão
+        boolean aleatorio = (s0 == null || s0.length != numProvs); // Solucao inicial do metodo
         // Para relatorio
         FileWriter fwE, fwC;
         BufferedWriter bwE = null, bwC = null;        
@@ -207,11 +207,7 @@ public class SA
         System.out.println("A temperatura final (Tf): " + Tf);
         System.out.println("A solucao inicial (s0): ");  imprimeVet(s0);
         System.out.println();*/
-        
-        // Solucao inicial do metodo
-        if(s0 == null || s0.length != numProvs)
-            aleatorio = true;
-        
+                
         // Inicia as execuções
         execucao = 1;        
         // LOOP DE EXECUÇÕES DO SA
@@ -255,7 +251,7 @@ public class SA
                     */
                     fwE = new FileWriter("temps/energiasSA" + execucao + ".txt");
                     bwE = new BufferedWriter(fwE);                    
-                    bwE.append(arredonda(Em, 4) + ",");
+                    bwE.append(arredonda(Em, 8) + ",");
                 }
                 catch(IOException ex)
                 {
@@ -321,7 +317,7 @@ public class SA
                             bwC.append(provCod(candidato));
                             bwC.newLine();*/
                             
-                            bwE.append( arredonda(Ec, 4) + (it >= IT_MAX ? "":",") );                            
+                            bwE.append( arredonda(Ec, 8) + (it >= IT_MAX ? "":",") );                            
                         } catch(IOException ex) {
                             System.out.println("Erro ao escrever no arquivo: " + ex.getMessage());                
                         }
@@ -361,13 +357,10 @@ public class SA
             execucao++;
         } // Fim das execucoes
         // DEBUG
-        /*System.out.println();
-        for(i = 0; i < MAX_EXECUCOES; i++)
-            imprimeVet(eleitos[i]);*/
+        //System.out.println(); for(i = 0; i < MAX_EXECUCOES; i++) imprimeVet(eleitos[i]);
         
-        // # # # # Estatisticas pós execuções do SA # # # #        
-        return estatisticaFinais(eleitos, energias, tempoExecusao);
-                
+        // # # # # Estatisticas pós execuções do SA # # # #
+        return estatisticaFinais(eleitos, energias, tempoExecusao);        
     } // FIM
     /**************************************************************************/
     /********************** DECREMENTO DE TEMPERATURA *************************/
@@ -448,7 +441,7 @@ public class SA
         double mediaT = 0.00;
         double desvioE = 0.00;
         //double desvioT = 0.00;
-        double melhorE = 9.00; // A melhor (menor) energia conhecida no momento para a requisição
+        double melhorE = Double.MAX_VALUE; // A melhor (menor) energia conhecida no momento para a requisição
         
         // Medias de egergias e tempo e a melhor (menor) energia encontrado
         for(i = 0; i < totalExe; i++)
@@ -481,8 +474,8 @@ public class SA
         }
         desvioE = desvioE / (totalExe - 1);
         desvioE = Math.sqrt(desvioE);
-        desvioE = arredonda(desvioE, 5); // Arredonda o valor do desvio
-        mediaE = arredonda(mediaE, 4); // Arredonda o valor da media
+        desvioE = arredonda(desvioE, 10); // Arredonda o valor do desvio
+        mediaE = arredonda(mediaE, 10); // Arredonda o valor da media
         //desvioT = desvioT / (totalExe - 1);        
         //desvioT = Math.sqrt(desvioT);       
         

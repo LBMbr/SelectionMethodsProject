@@ -169,21 +169,17 @@ public class EDD
         // Variaveis
         int i, j, a, b, c, d, geracao, execucao, NUM_VARS = af.getBase_dados().getNumProvedores();
         long tempoInicial, tempoFinal;
-        boolean aleatorio = false;
         PopulacaoReal p; // População real corrente
         IndividuoReal melhor, novo, atual, outro1, outro2, outro3;
         IndividuoReal[] eleitos = new IndividuoReal[MAX_EXECUCOES]; // Melhores invididuos de cada execusão
         double[] tempoExecusao = new double[MAX_EXECUCOES]; // Tempo de execusão de cada execusão
         double newCod;
+        boolean aleatorio = (iniciais == null || iniciais.isEmpty()); // Solucao inicial do metodo
         
         System.out.println("# # # # # Algoritmo da Evolução Diferencial Discretizada # # # # #\n");        
         //System.out.println("Espaço de busca: " + (Math.pow(2, NUM_VARS) - 1) + "\n");
         System.out.println("NumProv: " + NUM_PROV + "\nNumReq: " + NUM_REQ + "\nNumPIs: " + NUM_PIS + "\nNumDB: " + NUM_DB);
-        
-        // Solucao inicial do metodo
-        if(iniciais == null || iniciais.isEmpty())
-            aleatorio = true;
-        
+                        
         // Inicia as execuções
         execucao = 1;
         // LOOP DE EXECUÇÕES DO EDD
@@ -258,7 +254,7 @@ public class EDD
                             newCod = outro1.getCodPos(j) + F * (outro2.getCodPos(j) - outro3.getCodPos(j));
                             //newCod = p.getIndPos(a).getCodPos(j) + F * (p.getIndPos(b).getCodPos(j) - p.getIndPos(c).getCodPos(j));
                             //System.out.println("Novo valor: " + newCod);
-                            // Chega os limites
+                            // Checa os limites
                             if(newCod < -1.0)     newCod = -1.0;
                             else if(newCod > 1.0) newCod =  1.0;
                             //System.out.println("Novo valor: " + newCod);
@@ -319,9 +315,7 @@ public class EDD
         } // Fim das execuções do EDD
                 
         // DEBUG
-        /*for(int i = 0; i < MAX_EXECUCOES; i++)
-            System.out.print(eleitos[i]);
-        System.out.println();*/
+        //for(int i = 0; i < MAX_EXECUCOES; i++) System.out.print(eleitos[i]); System.out.println();
         
         // # # # # Estatisticas pós execuções do EDD # # # # 
         return estatisticaFinais(eleitos, tempoExecusao);
@@ -381,8 +375,8 @@ public class EDD
         }
         desvioF = desvioF / (totalExe - 1);
         desvioF = Math.sqrt(desvioF);
-        desvioF = arredonda(desvioF, 5); // Arredonda o valor do desvio
-        mediaF = arredonda(mediaF, 4); // Arredonda o valor da media
+        desvioF = arredonda(desvioF, 10); // Arredonda o valor do desvio
+        mediaF = arredonda(mediaF, 10); // Arredonda o valor da media
         //desvioT = desvioT / (totalExe - 1);        
         //desvioT = Math.sqrt(desvioT);       
         
@@ -406,9 +400,9 @@ public class EDD
             bw.append("(Req " + NUM_REQ + ")(Provs " + NUM_PROV + ")(PIs " + NUM_PIS + ")");
             bw.newLine();
             // Escreve de cada execução: Melhor fitness, tempo e as respostas 
-            bw.append("fitness <- c(" + arredonda(eleitos[0].getFitness(), 4));
+            bw.append("fitness <- c(" + arredonda(eleitos[0].getFitness(), 10));
             for(i = 1; i < totalExe; i++)            
-                bw.append(", " + arredonda(eleitos[i].getFitness(), 4));
+                bw.append(", " + arredonda(eleitos[i].getFitness(), 10));
             bw.append(");");            
             bw.newLine();
             bw.append("tempos <- c(" + tempoExecusao[0]);

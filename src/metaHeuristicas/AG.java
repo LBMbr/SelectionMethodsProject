@@ -163,22 +163,18 @@ public class AG
         int geracao, execucao, TAM_TORNEIO = 5; // Para seleção com torneio 
         //double C = 1.20; // Para escalonamento linear com roleta, com dominio: 1.20 <= C <= 2.00
         long tempoInicial, tempoFinal;
-        boolean aleatorio = false;
         PopulacaoBin p0; // População atual
         PopulacaoBin prox; // Proxima população
         IndividuoBin melhor; // Melhor individuo de p0
         double MNDF = 0.00; // Para calculo da variabilidade genética        
         IndividuoBin[] eleitos = new IndividuoBin[MAX_EXECUCOES]; // Melhores invididuos de cada execusão
         double[] tempoExecusao = new double[MAX_EXECUCOES]; // Tempo de execusão de cada execusão
+        boolean aleatorio = (iniciais == null || iniciais.isEmpty()); // Solucao inicial do metodo
         
-        System.out.println("# # # # # Algoritmo Genético de Busca # # # # #\n");        
+        System.out.println("# # # # # Algoritmo Genético de Busca # # # # #\n");
         //System.out.println("Espaço de busca: " + (Math.pow(2, NUM_VARS) - 1));
         System.out.println("NumProv: " + NUM_PROV + "\nNumReq: " + NUM_REQ + "\nNumPIs: " + NUM_PIS + "\nNumDB: " + NUM_DB);
-        
-        // Solucao inicial do metodo
-        if(iniciais == null || iniciais.isEmpty())
-            aleatorio = true;
-        
+               
         // Inicia as execuções
         execucao = 1;
         // LOOP DE EXECUÇÕES DO AG
@@ -298,9 +294,8 @@ public class AG
         } // Fim das execuções do AG
         
         // DEBUG
-        /*for(int i = 0; i < MAX_EXECUCOES; i++)
-        System.out.print(eleitos[i]);
-        System.out.println();*/
+        //for(int i = 0; i < MAX_EXECUCOES; i++) System.out.print(eleitos[i]); System.out.println();
+        
         // # # # # Estatisticas pós execuções do AG # # # #        
         return estatisticaFinais(eleitos, tempoExecusao);
     } // FIM
@@ -357,8 +352,8 @@ public class AG
         }
         desvioF = desvioF / (totalExe - 1);
         desvioF = Math.sqrt(desvioF);
-        desvioF = arredonda(desvioF, 5); // Arredonda o valor do desvio
-        mediaF = arredonda(mediaF, 4); // Arredonda o valor da media
+        desvioF = arredonda(desvioF, 10); // Arredonda o valor do desvio
+        mediaF = arredonda(mediaF, 10); // Arredonda o valor da media
         //desvioT = desvioT / (totalExe - 1);        
         //desvioT = Math.sqrt(desvioT);       
         
@@ -382,9 +377,9 @@ public class AG
             bw.append("(Req " + NUM_REQ + ")(Provs " + NUM_PROV + ")(PIs " + NUM_PIS + ")");
             bw.newLine();
             // Escreve de cada execução: Melhor fitness, tempo e as respostas 
-            bw.append("fitness <- c(" + arredonda(eleitos[0].getFitness(), 4));
+            bw.append("fitness <- c(" + arredonda(eleitos[0].getFitness(), 10));
             for(i = 1; i < totalExe; i++)            
-                bw.append(", " + arredonda(eleitos[i].getFitness(), 4));
+                bw.append(", " + arredonda(eleitos[i].getFitness(), 10));
             bw.append(");");            
             bw.newLine();
             bw.append("tempos <- c(" + tempoExecusao[0]);
@@ -454,17 +449,17 @@ public class AG
         try {
             fw = new FileWriter("temps/FitMelhorAG" + execucaoAtual + ".txt", append);
             bw = new BufferedWriter(fw);
-            bw.append(arredonda(p.getMelhorInd().getFitness(), 4) + (ultimo ? "":","));            
+            bw.append(arredonda(p.getMelhorInd().getFitness(), 10) + (ultimo ? "":","));            
             bw.close();
             
             fw = new FileWriter("temps/FitMedioAG" + execucaoAtual + ".txt", append);
             bw = new BufferedWriter(fw);
-            bw.append(arredonda(p.getFitnessMedio(), 4) + (ultimo ? "":","));            
+            bw.append(arredonda(p.getFitnessMedio(), 10) + (ultimo ? "":","));            
             bw.close();
             
             fw = new FileWriter("temps/VariabilidadeAG" + execucaoAtual + ".txt", append);
             bw = new BufferedWriter(fw);
-            bw.append(arredonda(p.variabilidadeGenetica(), 4) + (ultimo ? "":","));            
+            bw.append(arredonda(p.variabilidadeGenetica(), 10) + (ultimo ? "":","));            
             bw.close();
             
             /*fw = new FileWriter("temps/MNDF_AG" + execucaoAtual + ".txt", append);
